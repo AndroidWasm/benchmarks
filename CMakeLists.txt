@@ -6,7 +6,7 @@ set(INT_BENCHMARKS_ROOT "benchspec/CINT2000")
 
 set(SPEC_164_GZIP_PATH "${INT_BENCHMARKS_ROOT}/164.gzip/src")
 
-add_definitions(-DHAVE_UNISTD_H)
+add_compile_options(-Wno-implicit-function-declaration)
 
 add_executable(164.gzip
     ${SPEC_164_GZIP_PATH}/bits.c
