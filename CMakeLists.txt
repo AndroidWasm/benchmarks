@@ -7,6 +7,12 @@ set(INT_BENCHMARKS_ROOT "benchspec/CINT2000")
 set(SPEC_164_GZIP_PATH "${INT_BENCHMARKS_ROOT}/164.gzip/src")
 
 add_compile_options(-Wno-implicit-function-declaration)
+add_compile_options(-fvisibility=default)
+
+# For wasm-ld only
+if (ANDROID_WASM)
+  add_link_options(-Wl,--export=__main_argc_argv)
+endif()
 
 add_executable(164.gzip
     ${SPEC_164_GZIP_PATH}/bits.c
