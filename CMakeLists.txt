@@ -12,6 +12,7 @@ add_compile_options(-fvisibility=default)
 # For wasm-ld only
 if (ANDROID_WASM)
   add_link_options(-Wl,--export=__main_argc_argv)
+  add_link_options(-Wl,--strip-debug)
 endif()
 
 add_executable(164.gzip
