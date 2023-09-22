@@ -8,6 +8,7 @@ set(SPEC_164_GZIP_PATH "${INT_BENCHMARKS_ROOT}/164.gzip/src")
 
 add_compile_options(-Wno-implicit-function-declaration)
 add_compile_options(-fvisibility=default)
+add_compile_options(-O3)
 
 # For wasm-ld only
 if (ANDROID_WASM)
@@ -29,6 +30,6 @@ add_executable(164.gzip
     ${SPEC_164_GZIP_PATH}/unpack.c
     ${SPEC_164_GZIP_PATH}/unzip.c
     ${SPEC_164_GZIP_PATH}/util.c
-    ${SPEC_164_GZIP_PATH}/zip.c)
-
-
+    ${SPEC_164_GZIP_PATH}/zip.c
+    ${WASM_LIBRARY_PATH}/open-proxy.c
+    ${WASM_LIBRARY_PATH}/standalone-printf.c)
