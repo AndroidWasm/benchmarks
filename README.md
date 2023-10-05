@@ -11,6 +11,7 @@
 
     ```
     mkdir build_wasm
+    cd build_wasm
     cmake --toolchain $(wasm_ndk_root)/cmake/toolchain/android_wasm.toolchain.cmake ..
     cmake --build .
     ```
@@ -19,6 +20,7 @@
 
     ```
     mkdir build_native
-    cmake --toolchain $ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake ..
+    cd build_native
+    cmake --toolchain $ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a ..
     cmake --build .
     ```
