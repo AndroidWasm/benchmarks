@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+  stems=$@
+else
+  stems=`cat all-progs`
+fi
+
+for stem in $stems; do
+  if [ -r $stem.c ] ; then
+    src=$stem.c
+    ccmd=clang
+    extralib=
+  elif [ -r $stem.cpp ] ; then
+    src=$stem.cpp
+    ccmd=clang++
+    extralib=-lc++
+  else 
+    echo No $stem.c or $stem.cpp found >&2
+    exit 1
+  fi
+  echo ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+  ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+  echo $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
+  $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
+  echo $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
+  $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
+done

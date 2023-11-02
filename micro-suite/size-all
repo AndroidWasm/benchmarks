@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+  stems=$@
+else
+  stems=`cat all-progs`
+  if [ \( -x gzip \) -a \( -x gzip-native \) ]; then
+    stems="$stems gzip"
+  fi
+fi
+
+progs=''
+for stem in $stems; do
+  progs="$progs $stem ${stem}-native"
+done
+
+size $progs | sed 's/-native/ native/'

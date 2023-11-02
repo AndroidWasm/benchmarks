@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ $# -gt 0 ] ; then
+  stems=$@
+else
+  stems=`cat all-progs`
+fi
+
+progs=''
+for stem in $stems; do
+  progs="$progs $stem ${stem}-native"
+done
+
+extras="$ANDROID_CLANG_TOOLCHAIN/android_libc++/ndk/aarch65/lib/libc++_shared.so all-progs time-all"
+
+adb push $extras $progs /data/local/tmp
