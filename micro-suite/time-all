@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+  stems=$@
+else
+  stems=`cat all-progs`
+  if [ \( -x gzip \) -a \( -x gzip-native \) ]; then
+    stems="$stems gzip"
+  fi
+fi
+
+for stem in $stems; do
+  a=5
+  if [ $stem = gzip ]; then
+    a="gzip.input.compressed 100"
+  fi
+  echo $stem
+  echo wasm $stem 1>&2
+  LD_LIBRARY_PATH=. time ./$stem $a
+  echo 1>&2
+  echo native ${stem} 1>&2
+  LD_LIBRARY_PATH=. time ./${stem}-native $a
+  echo 1>&2
+  echo 1>&2
+done

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ $# -gt 0 ]; then
+  stems=$@
+else
+  stems=`cat all-progs`
+fi
+
+for stem in $stems; do
+  echo ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+  ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+done
