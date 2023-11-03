@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cmake --toolchain ~/wasm-ndk/wasm_ndk/cmake/toolchain/android_wasm.toolchain.cmake .
+cmake --build .
+
+./wasm2c-all $@
+./final-compile-all $@
