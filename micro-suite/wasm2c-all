@@ -7,6 +7,6 @@ else
 fi
 
 for stem in $stems; do
-  echo ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
-  ~/AW/wabt/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+  echo $WABT_HOME/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
+  $WABT_HOME/bin/wasm2c --experimental --enable-memory64 --disable-sandbox ${stem}.wasm -o ${stem}.wasm.c
 done

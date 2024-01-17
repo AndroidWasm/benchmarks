@@ -20,12 +20,12 @@ for stem in $stems; do
     exit 1
   fi
   if [ -r ${stem}.wasm.c ]; then
-    echo $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
-    $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
+    echo $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I $WABT_HOME/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
+    $ANDROID_CLANG_TOOLCHAIN/bin/clang -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I $WABT_HOME/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $extralib ${stem}.wasm.c -o $stem
   else
     echo Missing ${stem}.wasm.c >&2
     exit 1
   fi
-  echo $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
-  $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I ~/AW/wabt/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
+  echo $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I $WABT_HOME/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
+  $ANDROID_CLANG_TOOLCHAIN/bin/${ccmd} -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header -I $WABT_HOME/wasm2c --target=aarch64-linux-android29 --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot -O3 -g $src -o ${stem}-native
 done
