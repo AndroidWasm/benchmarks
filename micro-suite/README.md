@@ -2,8 +2,8 @@
 
 1. Set up your toolchain for WASM (see AndroidWasm/wasm_ndk).
 
-2. Configure ANDROID_NDK_HOME and ANDROID_CLANG_TOOLCHAIN environment variables
-   accordingly.
+2. Configure ANDROID_NDK_HOME, ANDROID_CLANG_TOOLCHAIN, and WABT_HOME
+   environment variables accordingly.
 
 3. Attach your android test device so that `adb` can see it.
 
@@ -38,7 +38,7 @@
    ./size-all >size-all.out
    ```
 
-   Ten process both outputs using the awk script:
+   Then process both outputs using the awk script:
 
    ```
    awk -f make-csv.awk time-all.out size-all.out >numbers.csv
