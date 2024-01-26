@@ -7,7 +7,7 @@ set(BENCHES_SRC_PATH ".")
 add_compile_options(-Wno-implicit-function-declaration)
 add_compile_options(-fvisibility=default)
 add_compile_options(-O3)
-add_compile_options(-fno-unroll-loops)
+#add_compile_options(-fno-unroll-loops)
 
 # For wasm-ld only
 if (ANDROID_WASM)

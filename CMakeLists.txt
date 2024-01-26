@@ -16,7 +16,7 @@ add_compile_options(-O3)
 if (ANDROID_WASM)
   add_link_options(-Wl,--export=__main_argc_argv)
   add_link_options(-Wl,--strip-debug)
-  add_compile_options(-fno-unroll-loops)
+  #  add_compile_options(-fno-unroll-loops)
 endif()
 
 add_executable(164.gzip
