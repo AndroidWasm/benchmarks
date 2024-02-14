@@ -34,9 +34,3 @@ add_executable(164.gzip
     ${SPEC_164_GZIP_PATH}/unzip.c
     ${SPEC_164_GZIP_PATH}/util.c
     ${SPEC_164_GZIP_PATH}/zip.c)
-
-if (ANDROID_WASM)
-  target_sources(164.gzip PRIVATE
-      ${WASM_LIBRARY_PATH}/open-proxy.c
-      ${WASM_LIBRARY_PATH}/standalone-printf.c)
-endif()
