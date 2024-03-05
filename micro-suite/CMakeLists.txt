@@ -39,6 +39,9 @@ add_executable(corrections64.wasm
 add_executable(fasta.wasm
     ${BENCHES_SRC_PATH}/fasta.cpp)
 
+target_link_libraries(fasta.wasm PRIVATE
+	c++)
+
 add_executable(ifs.wasm
     ${BENCHES_SRC_PATH}/ifs.c)
 
