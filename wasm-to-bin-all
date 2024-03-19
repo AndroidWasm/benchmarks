@@ -1,0 +1,7 @@
+#!/bin/sh
+
+PROGS='gzip vpr mcf parser eon vortex bzip2'
+
+d=`dirname $0`
+
+$d/wasm-to-bin $PROGS
