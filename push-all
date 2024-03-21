@@ -1,0 +1,53 @@
+#!/bin/sh
+
+need_libcxx=false
+dst=/data/local/tmp
+
+adb shell rm -rf $dst/run
+adb push run $dst >/dev/null
+
+progs=
+need_libcxx=false
+while read p lang; do
+  progs="${progs} ${p}"
+  if [ $lang = c++ ]; then
+    need_libcxx=true
+  fi
+done <all-progs
+
+for p in $progs; do
+  echo -n $p...
+  if [ -r build_wasm/$p ]; then
+    echo -n wasm...
+    adb push build_wasm/$p $dst/$p >/dev/null
+    np=build_native/*.$p
+    if [ -r $np ]; then
+      echo -n native...
+      adb push $np $dst/$p-native >/dev/null
+    fi
+    pg=$p.pfg
+    if [ -r build_wasm/$pg ]; then
+      echo -n profgen...
+      adb push build_wasm/$pg $dst/$pg >/dev/null
+    fi
+    pgo=$p.pgo
+    if [ -r build_wasm/$pgo ]; then
+      echo -n pgo...
+      adb push build_wasm/$pgo $dst/$pgo >/dev/null
+    fi
+    echo -n data...
+    adb shell rm -rf $dst/$p.data
+    adb push benchspec/CINT2000/*.$p/data $dst/$p.data >/dev/null
+    echo done.
+  else
+    echo skipped.
+  fi
+done
+
+if [ $need_libcxx = true ]; then
+  echo libc++...
+  adb push \
+    $ANDROID_CLANG_TOOLCHAIN/android_libc++/ndk/aarch64/lib/libc++_shared.so \
+    $dst/libc++_shared.so >/dev/null
+  echo done.
+fi

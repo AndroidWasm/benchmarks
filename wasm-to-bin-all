@@ -1,7 +1,46 @@
 #!/bin/sh
 
-PROGS='gzip vpr mcf parser eon vortex bzip2'
-
 d=`dirname $0`
 
-$d/wasm-to-bin $PROGS
+sfx=''
+if [ $# -gt 0 -a x$1 = x--profgen ]; then
+  sfx='.pfg'
+  shift
+elif [ $# -gt 0 -a x$1 = x--pgo ]; then
+  sfx='.pgo'
+  shift
+fi
+
+while read p lang; do
+  np=*.$p
+  echo -n $p "($lang)"...
+  if [ $np -nt $p$sfx ] ; then
+    $WABT_HOME/bin/wasm2c --experimental --enable-memory64 --disable-sandbox $np -o $p.wasm.c
+    echo -n "converted..."
+    LIBCXX=
+    if [ $lang = c++ ]; then
+      LIBCXX=-lc++
+    fi
+    if [ x$sfx = x.pfg ]; then
+      PROFGEN="-fprofile-generate=${p}.profraw"
+    elif [ x$sfx = x.pgo ]; then
+      PROFGEN="-fprofile-use=${d}/${p}.profdata"
+    else
+      PROFGEN=''
+    fi
+    $ANDROID_CLANG_TOOLCHAIN/bin/clang \
+      -Wno-incompatible-library-redeclaration \
+      -Wno-builtin-requires-header \
+      -I $WABT_HOME/wasm2c \
+      --target=aarch64-linux-android29 \
+      --sysroot=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot \
+      -mcpu=cortex-x3 \
+      $PROFGEN \
+      -O3 \
+      -lm $LIBCXX \
+      -g $p.wasm.c -o $p$sfx
+    echo done
+  else
+    echo up to date
+  fi
+done <$d/all-progs
