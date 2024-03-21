@@ -1,0 +1,43 @@
+#!/bin/sh
+
+p=mcf
+verify=no
+t=test
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --native)
+      p=${p}-native
+      ;;
+    --verify)
+      verify=yes
+      ;;
+    --profgen)
+      p=${p}.pfg
+      ;;
+    --pgo)
+      p=${p}.pgo
+      ;;
+    test|train|ref)
+      t=$1
+      ;;
+    *)
+      echo Unknown argument $1.
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+rm -f *.out
+
+echo Running $p on corpus $t...
+time ./$p mcf.data/$t/input/inp.in >stdout.out 2>stderr.out
+
+if [ $verify = yes ]; then
+  echo VERIFY
+  cmp stdout.out mcf.data/$t/output/inp.out
+  cmp mcf.out mcf.data/$t/output/mcf.out
+fi
+
+echo OK

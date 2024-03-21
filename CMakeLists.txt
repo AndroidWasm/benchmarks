@@ -244,14 +244,16 @@ target_include_directories(252.eon PRIVATE
 target_compile_options(252.eon PRIVATE
     -DSPEC_CPU2000_LP64 -DUSE_STRERROR -Wno-register)
 
+target_link_options(252.eon PRIVATE
+    --rtlib=compiler-rt)
+
 target_link_libraries(252.eon PRIVATE
-   c++
    m)
    
-if (ANDROID_WASM)
-  target_link_libraries(252.eon PRIVATE
-   clang_rt.builtins)
-endif()
+#if (ANDROID_WASM)
+#  target_link_libraries(252.eon PRIVATE
+#   clang_rt.builtins)
+#endif()
 
 add_executable(255.vortex
    ${SPEC_255_VORTEX_PATH}/bitvec.c

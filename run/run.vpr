@@ -1,0 +1,58 @@
+#!/bin/sh
+
+ARGS1="-nodisp -place_only -init_t 5 -exit_t 0.005 -alpha_t 0.9412 -inner_num 2"
+ARGS2="-nodisp -route_only -route_chan_width 15 -pres_fac_mult 2"
+ARGS2="${ARGS2} -acc_fac 1 -first_iter_pres_fac 4 -initial_pres_fac 8"
+
+p=vpr
+verify=no
+t=test
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --native)
+      p=${p}-native
+      ;;
+    --verify)
+      verify=yes
+      ;;
+    --profgen)
+      p=${p}.pfg
+      ;;
+    --pgo)
+      p=${p}.pgo
+      ;;
+    test|train|ref)
+      t=$1
+      ;;
+    *)
+      echo Unknown argument $1.
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+rm -f *.in
+rm -f *.out
+rm -f test*
+
+cp vpr.data/$t/input/* .
+
+echo Running $p...
+echo -n "place: "
+time ./$p net.in arch.in place.out dum.out ${ARGS1} >place_log.out 2>stderr1.out
+echo -n "route: "
+time ./$p net.in arch.in place.in route.out ${ARGS2} >route_log.out 2>stderr2.out
+
+if [ $verify = yes ]; then
+  echo VERIFY
+  for i in place_log.out route_log.out costs.out route.out; do
+    if ! diff $i vpr.data/$t/output/$i ; then
+      echo ""
+      echo "Diff in $i might be within the tolerance"
+    fi
+  done
+fi
+
+echo OK

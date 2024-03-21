@@ -1,0 +1,58 @@
+#!/bin/sh
+
+p=bzip2
+verify=no
+iter=2
+t=test
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --native)
+      p=${p}-native
+      ;;
+    --verify)
+      verify=yes
+      ;;
+    --profgen)
+      p=${p}.pfg
+      ;;
+    --pgo)
+      p=${p}.pgo
+      ;;
+    test)
+      t=test
+      iter=2
+      ;;
+    train)
+      t=train
+      iter=8
+      ;;
+    ref)
+      t=ref
+      iter=58
+      ;;
+    *)
+      echo Unknown argument $1.
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+rm -f *.out
+
+echo Running $p on corpus $t with $iter iterations...
+for f in bzip2.data/$t/input/input.*; do
+  bf=`basename $f`
+  printf '%-20s: ' $bf
+  time ./$p $f $iter >$bf.out 2>stderr.$bf.out
+done
+
+if [ $verify = yes ]; then
+  echo VERIFY
+  for o in input.*.out; do
+    cmp $o bzip2.data/$t/output/$o
+  done
+fi
+
+echo OK

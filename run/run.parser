@@ -1,0 +1,48 @@
+#!/bin/sh
+
+p=parser
+verify=no
+t=test
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --native)
+      p=${p}-native
+      ;;
+    --verify)
+      verify=yes
+      ;;
+    --profgen)
+      p=${p}.pfg
+      ;;
+    --pgo)
+      p=${p}.pgo
+      ;;
+    test|train|ref)
+      t=$1
+      ;;
+    *)
+      echo Unknown argument $1.
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+rm -f *.out
+rm -rf 2.1.dict words
+cp parser.data/all/input/2.1.dict 2.1.dict
+cp -r parser.data/all/input/words words
+
+echo Running $p on corpus $t...
+time ./$p 2.1.dict -batch \
+      <parser.data/$t/input/$t.in >stdout.out 2>stderr.out
+
+if [ $verify = yes ]; then
+  echo VERIFY
+  diff stdout.out parser.data/$t/output/$t.out
+fi
+
+rm -rf 2.1.dict words
+
+echo OK
